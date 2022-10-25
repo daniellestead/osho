@@ -8,9 +8,10 @@ Create an API that tracks configuration state(s) of IoT connected devices.
 2. An HTTP POST endpoint that updates the stored configuration either partially or completely.
 3. A way of de-duplicating multiple instances of configuration if there is a race condition.
 
-## Considerations
+## Considerations/notes
 
-- 
+- Had a hard time writing tests - new to spring boot framework.
+- Could have spent some more time refining update to handle race condition, currently if two updates are run within the same second there will be duplicates.
 
 ## How to use 
 
@@ -36,8 +37,16 @@ I.e
 
 ```http://localhost:8080/getDevice?id=123&states=2```
 
-will return the most recent 2 states for device ID: 123.
+will return the most recent 2 states for device ID: 123. If the states parameter is left out, this defaults to the most recent configuration state.
 
 ### updateDevice
 
-This endpoint takes a JSON body 
+This endpoint takes a JSON body and adds a new configuration state to the database. This will not overwrite any data already stored. 
+Example body might look something like:
+```json
+{
+  "id": "123",
+  "name": "lights",
+  "status": "on",
+}
+```
